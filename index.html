@@ -144,7 +144,7 @@
             card.addEventListener('click', () => {
                 const link = card.getAttribute('data-link');
                 navigator.clipboard.writeText(link).then(() => {
-                    modalMessage.textContent = 'Link kopiert: ' + link;
+                    modalMessage.textContent = 'Copied the Link: ';
                     modalContent.classList.add('show'); // Show the modal with animation
                     modal.style.display = "block"; // Show the modal
                     setTimeout(() => {
@@ -152,7 +152,7 @@
                         setTimeout(() => {
                             modal.style.display = "none"; // Remove from view after fade out
                         }, 500); // Match the duration of the fade out
-                    }, 3000); // Keep the modal visible for 3 seconds
+                    }, 2000); // Keep the modal visible for 3 seconds
                 }).catch(err => {
                     console.error('Fehler beim Kopieren: ', err);
                 });
