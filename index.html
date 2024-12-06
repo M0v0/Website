@@ -21,21 +21,36 @@
             flex-direction: column;
             align-items: center;
             margin: 10px;
-            width: 150px;
-            height: 150px; /* Adjust as needed */
+            width: 200px; /* Increased width */
+            height: 250px; /* Increased height */
             border-radius: 5px;
             background-color: #222; /* Darker shade for card background */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
             cursor: pointer;
+            overflow: hidden; /* Prevent overflow */
         }
 
         .card-container:hover {
             transform: scale(1.05); /* Slight zoom on hover */
         }
 
+        .card-image {
+            width: 100%;
+            height: 120px; /* Fixed height for image */
+            object-fit: cover; /* Cover the area */
+        }
+
         .card-title {
-            font-size: 1.2rem;
-            margin-bottom: 5px;
+            font-size: 1.5rem; /* Increased font size */
+            font-weight: bold; /* Bold text */
+            margin: 5px 0;
+            text-align: center; /* Centered text */
+        }
+
+        .card-description {
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 0 10px; /* Padding for description */
         }
 
         /* Modal styles */
@@ -48,18 +63,25 @@
             width: 100%; /* Full width */
             height: 100%; /* Full height */
             overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
             background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
         }
 
         .modal-content {
             background-color: #222;
-            margin: 15% auto; /* 15% from the top and centered */
+            margin: 30% auto; /* 30% from the top and centered */
             padding: 20px;
             border: 1px solid #888;
             width: 300px; /* Could be more or less, depending on screen size */
             text-align: center;
             border-radius: 5px;
+            opacity: 0; /* Start hidden */
+            transform: translateY(-20px); /* Start slightly above */
+            transition: opacity 0.5s ease, transform 0.5s ease; /* Fade and slide effect */
+        }
+
+        .modal-content.show {
+            opacity: 1; /* Show the modal */
+            transform: translateY(0); /* Move to original position */
         }
 
         .close {
@@ -80,26 +102,32 @@
 <body>
 
     <div class="card-container" data-link="https://www.example.com/card1">
+        <img src="https://via.placeholder.com/200x120" alt="Card 1 Image" class="card-image">
         <div class="card-content">
             <p class="card-title">Card 1</p>
+            <p class="card-description">Kurze Beschreibung für Karte 1.</p>
         </div>
     </div>
 
     <div class="card-container" data-link ="https://www.example.com/card2">
+        <img src="https://via.placeholder.com/200x120" alt="Card 2 Image" class="card-image">
         <div class="card-content">
             <p class="card-title">Card 2</p>
+            <p class="card-description">Kurze Beschreibung für Karte 2.</p>
         </div>
     </div>
 
     <div class="card-container" data-link="https://www.example.com/card3">
+        <img src="https://via.placeholder.com/200x120" alt="Card 3 Image" class=" card-image">
         <div class="card-content">
             <p class="card-title">Card 3</p>
+            <p class="card-description">Kurze Beschreibung für Karte 3.</p>
         </div>
     </div>
 
     <!-- Modal -->
     <div id="myModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" id="modalContent">
             <span class="close">&times;</span>
             <p id="modalMessage">Link kopiert!</p>
         </div>
@@ -109,6 +137,7 @@
         const cards = document.querySelectorAll('.card-container');
         const modal = document.getElementById("myModal");
         const closeModal = document.querySelector(".close");
+        const modalContent = document.getElementById("modalContent");
         const modalMessage = document.getElementById("modalMessage");
 
         cards.forEach(card => {
@@ -116,7 +145,14 @@
                 const link = card.getAttribute('data-link');
                 navigator.clipboard.writeText(link).then(() => {
                     modalMessage.textContent = 'Link kopiert: ' + link;
+                    modalContent.classList.add('show'); // Show the modal with animation
                     modal.style.display = "block"; // Show the modal
+                    setTimeout(() => {
+                        modalContent.classList.remove('show'); // Hide with animation
+                        setTimeout(() => {
+                            modal.style.display = "none"; // Remove from view after fade out
+                        }, 500); // Match the duration of the fade out
+                    }, 3000); // Keep the modal visible for 3 seconds
                 }).catch(err => {
                     console.error('Fehler beim Kopieren: ', err);
                 });
@@ -124,15 +160,20 @@
         });
 
         closeModal.onclick = function() {
-            modal.style.display = "none"; // Close the modal
+            modalContent.classList.remove('show'); // Hide with animation
+            setTimeout(() => {
+                modal.style.display = "none"; // Remove from view after fade out
+            }, 500); // Match the duration of the fade out
         }
 
         window.onclick = function(event) {
             if (event.target == modal) {
-                modal.style.display = "none"; // Close the modal if clicked outside
+                modalContent.classList.remove('show'); // Hide with animation
+                setTimeout(() => {
+                    modal.style.display = "none"; // Remove from view after fade out
+                }, 500); // Match the duration of the fade out
             }
         }
- }
     </script>
 </body>
-</html> 
+</html>
